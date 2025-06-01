@@ -57,6 +57,7 @@ fun App(){
     var numTrue by remember { mutableStateOf(Random.nextInt(1, 100)) }
     var userGuess by remember { mutableStateOf("") }
     var intentos by remember { mutableStateOf(3) }
+    var cont by remember {mutableStateOf((intentos+1)-intentos)}
     var estadoGame by remember { mutableStateOf("") }
     var finGame by remember { mutableStateOf(false) }
     Column(
@@ -67,21 +68,27 @@ fun App(){
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Adivina un numero entre 1 a 100",
+            text = "Adivina un numero entre 1 - 100",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 24.dp)
 
         )
 
         Text(
             text = "Tiene 3 intentos para adivinar",
             fontSize = 18.sp,
+            modifier = Modifier.padding(bottom = 16.dp)
+
+        )
+
+        Text(
+            text = if (intentos != 0)"Intento: $cont" else "Intentos Agotados ",
             modifier = Modifier.padding(bottom = 24.dp)
         )
 
         Text(
-            text = "Número a Adivinar: ?",
+            text = "Número a Adivinar: $numTrue",
             fontSize = 20.sp,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(bottom = 16.dp))
@@ -100,6 +107,8 @@ fun App(){
             onClick = {
                 val guess = userGuess.toIntOrNull()
                 if (guess != null){
+                    intentos--
+                    cont++
                     when {
                         guess == numTrue -> {
                             estadoGame = "¡Correcto! Has adivinado el número."
@@ -110,7 +119,7 @@ fun App(){
                     }
 
                     if (intentos == 0 && guess != numTrue) {
-                        estadoGame = "¡Se acabaron los intentos! El número era 3"
+                        estadoGame = "¡Se acabaron los intentos! El número era $numTrue"
                         finGame = true
                     }
                 }
@@ -136,6 +145,7 @@ fun App(){
                     numTrue = Random.nextInt(1, 101)
                     userGuess = ""
                     intentos = 3
+                    cont = (intentos+1)-intentos
                     estadoGame = ""
                     finGame = false
                 },
